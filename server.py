@@ -51,6 +51,45 @@ class ApplicationHandler(SimpleHTTPRequestHandler):
         self.send_response(201)
         self.send_header("Content-Length", "0")
         self.end_headers()
+    def do_PATCH(self):
+        if self.path != "/api/applications/status":
+            self.send_error(404)
+            return
+
+        if self.headers.get_content_type() != "application/json":
+            self.send_error(415, "Send application/json")
+            return
+
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if not 1 <= length <= 4096:
+                raise ValueError
+
+            data = json.loads(self.rfile.read(length))
+            application_id = data["id"]
+            status = data["status"]
+
+            if type(application_id) is not int or not 1 <= application_id <= 2**63 - 1:
+                raise ValueError
+            if status not in ("Applied", "Interview", "Offer", "Rejected"):
+                raise ValueError
+        except (ValueError, KeyError, TypeError):
+            self.send_error(400, "Invalid application ID or status")
+            return
+
+        with closing(sqlite3.connect(DATABASE)) as connection:
+            result = connection.execute(
+                "UPDATE applications SET status = ? WHERE id = ?",
+                (status, application_id),
+            )
+            if result.rowcount == 0:
+                self.send_error(404, "Application not found")
+                return
+
+            connection.commit()
+
+        self.send_response(204)
+        self.end_headers()
 
     def do_GET(self):
         if self.path == "/api/applications":

@@ -41,11 +41,67 @@ function renderApplications() {
         item.textContent =
             `${application.jobTitle} at ${application.company} — ` +
             `${application.status} — ${dateLabel}`;
+        const statusSelect = document.createElement("select");
+        statusSelect.setAttribute(
+            "aria-label",
+            `Change status for ${application.jobTitle} at ${application.company}`
+        );
 
+        for (const status of ["Applied", "Interview", "Offer", "Rejected"]) {
+            const option = document.createElement("option");
+            option.value = status;
+            option.textContent = status;
+            statusSelect.appendChild(option);
+        }
+
+        statusSelect.value = application.status;
+
+        statusSelect.addEventListener("change", function () {
+            updateApplicationStatus(application, statusSelect);
+        });
+
+        item.append(" ", statusSelect);
         applicationList.appendChild(item);
     }
 }
+async function updateApplicationStatus(application, statusSelect) {
+    const newStatus = statusSelect.value;
+    statusSelect.disabled = true;
+    message.textContent = "";
 
+    try {
+        const response = await fetch("/api/applications/status", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                id: application.id,
+                status: newStatus
+            })
+        });
+
+        if (!response.ok) {
+            statusSelect.value = application.status;
+            message.textContent = "Could not update the status. Try again.";
+            return;
+        }
+
+        const savedApplication = savedApplications.find(function (entry) {
+            return entry.id === application.id;
+        });
+
+        if (savedApplication) {
+            savedApplication.status = newStatus;
+        }
+
+        renderApplications();
+        message.textContent = "Application status updated.";
+    } catch {
+        statusSelect.value = application.status;
+        message.textContent = "Could not confirm the update. Refresh the page to check.";
+    } finally {
+        statusSelect.disabled = false;
+    }
+}
 async function loadApplications() {
     const response = await fetch("/api/applications", { cache: "no-store" });
 
