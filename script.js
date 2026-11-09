@@ -61,6 +61,19 @@ function renderApplications() {
         });
 
         item.append(" ", statusSelect);
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.textContent = "Delete";
+        deleteButton.setAttribute(
+            "aria-label",
+            `Delete ${application.jobTitle} at ${application.company}`
+        );
+
+        deleteButton.addEventListener("click", function () {
+            deleteApplication(application, deleteButton);
+        });
+
+        item.append(" ", deleteButton);
         applicationList.appendChild(item);
     }
 }
@@ -100,6 +113,40 @@ async function updateApplicationStatus(application, statusSelect) {
         message.textContent = "Could not confirm the update. Refresh the page to check.";
     } finally {
         statusSelect.disabled = false;
+    }
+}
+async function deleteApplication(application, deleteButton) {
+    const confirmed = window.confirm(
+        `Delete your application for ${application.jobTitle} at ${application.company}?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    deleteButton.disabled = true;
+    message.textContent = "";
+
+    try {
+        const response = await fetch(`/api/applications/${application.id}`, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            message.textContent = "Could not delete the application. Refresh and try again.";
+            return;
+        }
+
+        savedApplications = savedApplications.filter(function (entry) {
+            return entry.id !== application.id;
+        });
+
+        renderApplications();
+        message.textContent = "Application deleted.";
+    } catch {
+        message.textContent = "Could not confirm the deletion. Refresh the page to check.";
+    } finally {
+        deleteButton.disabled = false;
     }
 }
 async function loadApplications() {

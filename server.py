@@ -90,6 +90,35 @@ class ApplicationHandler(SimpleHTTPRequestHandler):
 
         self.send_response(204)
         self.end_headers()
+    def do_DELETE(self):
+        prefix = "/api/applications/"
+        if not self.path.startswith(prefix):
+            self.send_error(404)
+            return
+
+        raw_id = self.path[len(prefix):]
+        if not raw_id.isascii() or not raw_id.isdecimal() or len(raw_id) > 19:
+            self.send_error(400, "Invalid application ID")
+            return
+
+        application_id = int(raw_id)
+        if not 1 <= application_id <= 2**63 - 1:
+            self.send_error(400, "Invalid application ID")
+            return
+
+        with closing(sqlite3.connect(DATABASE)) as connection:
+            result = connection.execute(
+                "DELETE FROM applications WHERE id = ?",
+                (application_id,),
+            )
+            if result.rowcount == 0:
+                self.send_error(404, "Application not found")
+                return
+
+            connection.commit()
+
+        self.send_response(204)
+        self.end_headers()
 
     def do_GET(self):
         if self.path == "/api/applications":
