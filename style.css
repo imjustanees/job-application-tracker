@@ -1,0 +1,166 @@
+:root {
+    --paper: #f4f0e6;
+    --ink: #172a3a;
+    --muted: #4e606d;
+    --line: #b6b0a4;
+    --accent: #f4a340;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 24px;
+    background: var(--paper);
+    color: var(--ink);
+    font: 16px/1.5 system-ui, sans-serif;
+}
+
+main {
+    display: grid;
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+    column-gap: 36px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+main > h1,
+main > p {
+    grid-column: 1 / -1;
+    margin: 0;
+    background: var(--ink);
+    color: #fff;
+}
+
+main > h1 {
+    padding: 28px 28px 4px;
+    border-top: 6px solid var(--accent);
+    font: 700 clamp(2rem, 5vw, 3.5rem)/1.1 Georgia, serif;
+}
+
+main > p {
+    padding: 8px 28px 24px;
+    margin-bottom: 28px;
+    color: #dce4ea;
+}
+
+section {
+    min-width: 0;
+}
+
+main > section:first-of-type {
+    padding-right: 24px;
+    border-right: 1px solid var(--line);
+}
+
+h2 {
+    margin: 0 0 16px;
+    font: 700 1.5rem/1.2 Georgia, serif;
+}
+
+label {
+    display: block;
+    margin: 12px 0 4px;
+    color: var(--muted);
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+input,
+select,
+button {
+    min-height: 44px;
+    max-width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #827b70;
+    border-radius: 2px;
+    background: #fffdf8;
+    color: var(--ink);
+    font: inherit;
+}
+
+input,
+#status {
+    width: 100%;
+    min-width: 0;
+}
+
+button {
+    cursor: pointer;
+}
+
+button[type="submit"] {
+    width: 100%;
+    border-color: var(--ink);
+    background: var(--accent);
+    font-weight: 700;
+}
+
+button:not(:disabled):hover {
+    box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+button:disabled,
+select:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
+
+:focus-visible {
+    outline: 3px solid #8c4500;
+    outline-offset: 3px;
+}
+
+#application-list {
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--ink);
+}
+
+#application-list li {
+    padding: 16px 12px;
+    border-bottom: 1px solid var(--line);
+    overflow-wrap: anywhere;
+}
+
+#application-list li:nth-child(even) {
+    background: #ebe5d8;
+}
+
+#application-list select,
+#application-list button {
+    margin-top: 8px;
+}
+
+#application-list button {
+    color: #8a2635;
+}
+
+#application-message {
+    color: var(--muted);
+    font-size: 0.875rem;
+}
+
+@media (max-width: 720px) {
+    body {
+        padding: 12px;
+    }
+
+    main {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 12px;
+    }
+
+    main > h1 {
+        margin-bottom: -12px;
+    }
+
+    main > section:first-of-type {
+        padding: 0 0 24px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+    }
+}
