@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Tracker</title>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <main>
+        <h1>Job Application Tracker</h1>
+        <p>Keep track of where you’ve applied and what stage each application is at.</p>
+
+        <section>
+            <h2>Add an application</h2>
+
+            <form id="application-form">
+                <p>
+                    <label for="company">Company</label>
+                    <input id="company" name="company" type="text" placeholder="e.g. Example Tech" maxlength="100"
+                        required>
+                </p>
+
+                <p>
+                    <label for="job-title">Job title</label>
+                    <input id="job-title" name="jobTitle" type="text" placeholder="e.g. Junior Software Developer"
+                        maxlength="100" required>
+                </p>
+
+                <p>
+                    <label for="date-applied">Date applied</label>
+                    <input id="date-applied" name="dateApplied" type="date" required>
+                </p>
+
+                <p>
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="applied">Applied</option>
+                        <option value="interview">Interview</option>
+                        <option value="offer">Offer</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </p>
+
+                <button type="submit">Save application</button>
+            </form>
+            <p id="application-message" role="status"></p>
+        </section>
+
+        <section>
+            <h2>My applications</h2>
+            <label for="application-search">Search applications</label>
+            <input id="application-search" type="search" placeholder="Company or job title">
+            <label for="status-filter">Filter by status</label>
+            <select id="status-filter">
+                <option value="">All statuses</option>
+                <option value="Applied">Applied</option>
+                <option value="Interview">Interview</option>
+                <option value="Offer">Offer</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+            <ul id="application-list">
+                <li>No applications logged yet.</li>
+            </ul>
+        </section>
+    </main>
+</body>
+
+</html>
