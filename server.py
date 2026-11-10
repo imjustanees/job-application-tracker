@@ -1,4 +1,5 @@
 import json
+import os
 import sqlite3
 from contextlib import closing
 from datetime import date
@@ -6,7 +7,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parent
-DATABASE = PROJECT_DIR / "applications.db"
+DATABASE = Path(os.environ.get("DATABASE_PATH", PROJECT_DIR / "applications.db"))
 
 
 class ApplicationHandler(SimpleHTTPRequestHandler):
@@ -154,5 +155,6 @@ if __name__ == "__main__":
         """)
         connection.commit()
 
-    print("Job Application Tracker running on port 8000", flush=True)
-    ThreadingHTTPServer(("0.0.0.0", 8000), ApplicationHandler).serve_forever()
+    port = int(os.environ.get("PORT", "8000"))
+    print(f"Job Application Tracker running on port {port}", flush=True)
+    ThreadingHTTPServer(("0.0.0.0", port), ApplicationHandler).serve_forever()
