@@ -10,6 +10,12 @@ A full-stack app for tracking job applications from Applied through Interview, O
 - Delete applications with a confirmation prompt.
 - Save applications in SQLite so they survive page refreshes and server restarts.
 
+## Live demo
+
+[Open Job Application Tracker](https://job-application-tracker-dnrs.onrender.com)
+
+The first load may take a moment. Use fictional entries in this public demo.
+
 ## Screenshot
 
 ![Job Application Tracker showing the form and application dashboard](images/job-application-tracker.png)
